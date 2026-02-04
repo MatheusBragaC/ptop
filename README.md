@@ -53,7 +53,7 @@ O projeto segue uma arquitetura modular para garantir manutenibilidade e testabi
 *   **UI (`src/ui`)**: Lógica de renderização usando buffering eficiente e sequências de escape ANSI.
 *   **Main**: Orquestração do loop de eventos.
 
-## Como Funciona (Por debaixo dos panos)
+## Como Funciona
 
 O `ptop` não é apenas um script shell glorificado; é uma aplicação de sistemas de verdade. Aqui está o que acontece no engine:
 
@@ -63,7 +63,7 @@ Em vez de um loop `while(1) { sleep(1); }` ineficiente, o `ptop` usa `epoll`. O 
 *   **Sinais (`signalfd`)**: Captura sinais POSIX como `SIGWINCH` (redimensionamento de janela) e `SIGINT` (Ctrl+C) como eventos de arquivo, permitindo tratamento síncrono e seguro.
 *   **Entrada (`STDIN`)**: Monitora o teclado e mouse sem bloquear a execução.
 
-### 2. Kernel Hacker Mode: Netlink Sockets 🐧
+### 2. Kernel Hacker Mode: Netlink Sockets
 Para a lista de processos, o `ptop` ignora o sistema de arquivos `/proc` (que é lento para varrer milhares de pastas) e fala diretamente com o Kernel Linux via **Sockets Netlink** (família `TASKSTATS`).
 *   Um driver personalizado (`src/core/netlink_driver.c`) implementa o protocolo binário `AF_NETLINK` "na unha", sem bibliotecas pesadas como `libnl`.
 *   Envia comandos `TASKSTATS_CMD_GET` para obter estatísticas de precisão de nanosegundos sobre o tempo de execução da CPU de cada tarefa.
