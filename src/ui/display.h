@@ -1,10 +1,10 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "cpu.h"
+#include "model.h"
 
 void setup_terminal();
+void render_interface(CpuModel* model);
 void restore_terminal();
-void render_interface(CpuMonitor* cpumon);
 
 #endif

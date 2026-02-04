@@ -1,10 +1,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
-#define APPEND_LIT(buf, str) (memcpy(buf, str, sizeof(str)-1), buf + sizeof(str)-1)
+#define APPEND_LIT(buf, str) (memcpy(buf, str, sizeof(str) - 1), buf + sizeof(str) - 1)
 
 static inline char *append_int(char *buf, int val)
 {
@@ -15,7 +15,7 @@ static inline char *append_int(char *buf, int val)
     {
         *p++ = (val % 10) + '0';
         val /= 10;
-    } while ( val > 0);
+    } while (val > 0);
 
     while (temp < p)
     {
@@ -27,7 +27,8 @@ static inline char *append_int(char *buf, int val)
 
 static inline char *append_str(char *buf, const char *str)
 {
-    while (*str) *buf++ = *str++;
+    while (*str)
+        *buf++ = *str++;
     return buf;
 }
 

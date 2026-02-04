@@ -1,0 +1,37 @@
+# Build directory
+build/
+cmake-build-debug/
+cmake-build-release/
+
+# Binaries
+bin/
+lib/
+ptop
+test_parser
+
+# Object files
+*.o
+*.a
+*.so
+*.dylib
+
+# Logs
+*.log
+ptop.log
+
+# CMake specific
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+Makefile
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Clang
+.clang-format.bak

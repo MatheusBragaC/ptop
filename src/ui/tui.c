@@ -1,11 +1,11 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <termios.h>
-#include "utils.h"
 #include "tui.h"
 #include "cfg.h"
+#include "utils.h"
+#include <stdio.h>
+#include <termios.h>
+#include <unistd.h>
 
-static const char* dots[8] = {
+static const char *dots[8] = {
     "\xE2\xA3\x80", // ⣀ (Nível 1)
     "\xE2\xA3\xA0", // ⣠
     "\xE2\xA3\xA4", // ⣤
@@ -16,16 +16,9 @@ static const char* dots[8] = {
     "\xE2\xA3\xBF"  // ⣿ (Nível 8 - Cheio)
 };
 
-static const char* graph_colors[8] = {
-    "\033[38;5;47m",
-    "\033[38;5;82m", 
-    "\033[38;5;154m", 
-    "\033[38;5;226m",
-    "\033[38;5;214m", 
-    "\033[38;5;208m", 
-    "\033[38;5;196m",
-    "\033[38;5;196m" 
-};
+static const char *graph_colors[8] = {"\033[38;5;47m",  "\033[38;5;82m",  "\033[38;5;154m",
+                                      "\033[38;5;226m", "\033[38;5;214m", "\033[38;5;208m",
+                                      "\033[38;5;196m", "\033[38;5;196m"};
 
 static struct termios original_term;
 void tui_setup()
@@ -61,9 +54,9 @@ char *tui_draw_box(char *p, int x, int y, int w, int h, char *color)
     for (int i = 0; i < h - 2; i++)
     {
         p = append_str(p, "\033[");
-        p = append_int(p, y+1+i);
+        p = append_int(p, y + 1 + i);
         p = append_str(p, ";");
-        p = append_int(p, x+w-1);
+        p = append_int(p, x + w - 1);
         p = append_str(p, "H");
         p = append_str(p, BOX_V);
     }
@@ -71,7 +64,7 @@ char *tui_draw_box(char *p, int x, int y, int w, int h, char *color)
     for (int i = 0; i < h - 2; i++)
     {
         p = append_str(p, "\033[");
-        p = append_int(p, y+1+i);
+        p = append_int(p, y + 1 + i);
         p = append_str(p, ";");
         p = append_int(p, x);
         p = append_str(p, "H");
@@ -79,7 +72,7 @@ char *tui_draw_box(char *p, int x, int y, int w, int h, char *color)
     }
 
     p = append_str(p, "\033[");
-    p = append_int(p, y+h-1);
+    p = append_int(p, y + h - 1);
     p = append_str(p, ";");
     p = append_int(p, x);
     p = append_str(p, "H");
@@ -143,4 +136,5 @@ char *tui_draw_graph(char *p, int x, int y, uint8_t *data, int len, int head)
         else
             p = append_str(p, "\033[38;5;236m·");
     }
+    return p;
 }
