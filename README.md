@@ -53,7 +53,7 @@ O projeto segue uma arquitetura modular para garantir manutenibilidade e testabi
 *   **UI (`src/ui`)**: Lógica de renderização usando buffering eficiente e sequências de escape ANSI.
 *   **Main**: Orquestração do loop de eventos.
 
-## 🔧 Como Funciona (Por debaixo dos panos)
+## Como Funciona (Por debaixo dos panos)
 
 O `ptop` não é apenas um script shell glorificado; é uma aplicação de sistemas de verdade. Aqui está o que acontece no engine:
 
