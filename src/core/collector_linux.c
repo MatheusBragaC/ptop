@@ -2,6 +2,7 @@
 #include "collector.h"
 #include "parser.h"
 #include "cfg.h"
+#include "process_list.h"
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,12 +17,15 @@ struct CpuCollectorState
     int fd_temp;
     int fd_freq[PHY_CORES_N];
 
-    // Previous ticks for usage calculation
+    // Ticks anteriores para cálculo de uso
     uint64_t prev_total[CORES_N];
     uint64_t prev_idle[CORES_N];
+
+    // Process State Cache
+    ProcessState proc_cache[MAX_TRACKED_PIDS];
 };
 
-// --- Helper Functions ---
+// --- Funções Auxiliares ---
 
 static inline int read_sysfs_int_file(int fd)
 {
@@ -58,8 +62,8 @@ static int get_coretemp_id()
 
         p = buf;
         int j = 0;
-        // Simple check: matches "coretemp" or similar could be better
-        // For now using the existing logic (checking against CORE_LABEL_NAME)
+        // Verifica simples: corresponde a "coretemp" ou similar poderia ser melhor
+        // Por enquanto usando a lógica existente (verificando contra CORE_LABEL_NAME)
         while (*p && j < CORE_LABEL_NAME_N)
         {
             if (*p++ != CORE_LABEL_NAME[j++])
@@ -70,7 +74,7 @@ static int get_coretemp_id()
     return -1;
 }
 
-// --- Implementation ---
+// --- Implementação ---
 
 CpuCollector* collector_init()
 {
@@ -163,10 +167,33 @@ static void update_sysinfo(CpuModel* model)
     }
 }
 
+static void fetch_cpu_name(CpuModel* model)
+{
+    int fd = open("/proc/cpuinfo", O_RDONLY);
+    if (fd < 0) return;
+    
+    char buf[4096];
+    ssize_t n = read(fd, buf, sizeof(buf)-1);
+    close(fd);
+    
+    if (n > 0) {
+        buf[n] = '\0';
+        parse_cpu_model_name(buf, model->cpu_name, sizeof(model->cpu_name));
+    }
+}
+
+
 void collector_update(CpuCollector* self, CpuModel* model)
 {
     update_freq(self, model);
     update_temp(self, model);
     update_cpu_usage(self, model);
     update_sysinfo(model);
+    
+    if (model->cpu_name[0] == '\0') {
+        fetch_cpu_name(model);
+    }
+    
+    // Update Process List (Netlink)
+    update_process_list(model, self->proc_cache, MAX_TRACKED_PIDS);
 }

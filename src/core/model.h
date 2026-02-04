@@ -1,27 +1,40 @@
-#ifndef CPU_MODEL_H
-#define CPU_MODEL_H
+#ifndef MODEL_H
+#define MODEL_H
 
-#include "cfg.h"
 #include <stdint.h>
+#include <stdint.h>
+#include "cfg.h"
+
+#define MAX_PROCESSES 10
+
+typedef struct {
+    uint32_t pid;
+    char comm[16];
+    double cpu_percent;
+} ProcessInfo;
 
 typedef struct
 {
-    // Snapshot Metrics
-    uint16_t freq_mhz;
-    int8_t temp_c;
-    
-    // Core Usage
-    uint8_t usage[CORES_N];
-    
-    // System Load
-    uint32_t uptime_sec;
-    uint32_t load_avg_1;
-    uint32_t load_avg_5;
-    uint32_t load_avg_15;
+    // Info Estática
+    char cpu_name[64];
 
-    // Visualization History
-    uint8_t graph_head;
+    // Métricas Dinâmicas
+    uint8_t usage[CORES_N];
     uint8_t graph_hist[CORES_N][GRAPH_WIDTH];
+    int graph_head;
+    
+    int temp_c;
+    int freq_mhz;
+    
+    unsigned long load_avg_1;
+    unsigned long load_avg_5;
+    unsigned long load_avg_15;
+
+    int uptime_sec;
+
+    // Process List (Kernel Hacker Feature)
+    int process_count;
+    ProcessInfo processes[MAX_PROCESSES];
 
 } CpuModel;
 

@@ -34,6 +34,8 @@ set(CORE_SOURCES
     src/core/collector_linux.c
     src/core/parser.c
     src/core/parser.h
+    src/core/netlink_driver.c
+    src/core/process_list.c
 )
 
 # UI (Display & TUI)

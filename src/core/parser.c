@@ -48,7 +48,7 @@ void parse_proc_stat(const char* buffer, CpuModel* model, uint64_t* prev_total, 
             active += val;
         }
 
-        // Skip to next line
+        // Pula para próxima linha
         while (*p && *p != '\n') p++;
         if (*p == '\n') p++;
 
@@ -64,8 +64,38 @@ void parse_proc_stat(const char* buffer, CpuModel* model, uint64_t* prev_total, 
         prev_total[cpu_id] = total;
         prev_idle[cpu_id] = total_idle;
         
-        // Update history graph in model
+        // Atualiza histórico do gráfico no modelo
         model->graph_hist[cpu_id][model->graph_head] = current_usage;
     }
     model->graph_head = (model->graph_head + 1) % GRAPH_WIDTH;
 }
+
+void parse_cpu_model_name(const char* buffer, char* out_name, size_t max_len)
+{
+    const char *p = buffer;
+    while(*p) {
+        // Procura por "model name" (x86) ou "Hardware" (ARM as vezes)
+        if (strncmp(p, "model name", 10) == 0) {
+            while (*p && *p != ':') p++;
+            if (*p == ':') p++;
+            while (*p && *p == ' ') p++; // Pula espaços
+            
+            // Pula prefixos comuns
+            if (strncmp(p, "Intel(R) Core(TM) ", 18) == 0) p += 18;
+            else if (strncmp(p, "AMD Ryzen ", 10) == 0) p += 10;
+            else if (strncmp(p, "12th Gen Intel(R) Core(TM) ", 27) == 0) p += 27; // Captura específico do usuário
+
+            size_t i = 0;
+            while (*p && *p != '\n' && i < max_len - 1) {
+                out_name[i++] = *p++;
+            }
+            out_name[i] = '\0';
+            return;
+        }
+        // Next line
+        while (*p && *p != '\n') p++;
+        if (*p == '\n') p++;
+    }
+    snprintf(out_name, max_len, "Unknown CPU");
+}
+
