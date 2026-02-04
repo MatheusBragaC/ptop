@@ -92,6 +92,6 @@ Contribuições são bem-vindas! Por favor, siga o estilo de código do projeto 
 4.  Push para a Branch (`git push origin feature/FeatureIncrivel`)
 5.  Abra um Pull Request
 
-## 📄 Licença
+## Licença
 
 Só um cara brincando um pouco
